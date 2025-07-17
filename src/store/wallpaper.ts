@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-const useGlobalSetting = defineStore('globalSetting', () => {
+const useWallpaper = defineStore('wallpaper', () => {
   const lock = ref(true)
   const setLock = (value: boolean) => {
     lock.value = value
@@ -15,4 +15,4 @@ const useGlobalSetting = defineStore('globalSetting', () => {
   persist: true,
 })
 
-export default useGlobalSetting
+export default useWallpaper

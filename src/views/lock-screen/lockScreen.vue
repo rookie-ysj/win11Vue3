@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import globalSetting from '@/store/globalSetting.ts'
-import { getDayOfWeek } from '@/utils/calculate.ts'
 import dayjs from 'dayjs'
 import { ref } from 'vue'
+import globalSetting from '@/store/wallpaper.ts'
+import { getDayOfWeek } from '@/utils/calculate.ts'
 
 const currentDay = dayjs()
 

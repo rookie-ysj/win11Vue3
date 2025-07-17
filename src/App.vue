@@ -1,13 +1,22 @@
 <script lang="ts" setup>
-import { useGlobalSetting } from '@/store'
-import LockScreen from '@/views/lockScreen/index.vue'
+import DesktopApp from '@/components/desktop-app/desktopApp.vue'
+import SidePane from '@/components/side-pane/sidePane.vue'
+import StartMenu from '@/components/start-menu/startMenu.vue'
+import Taskbar from '@/components/taskbar/taskbar.vue'
+import { useWallpaper } from '@/store'
+import LockScreen from '@/views/lock-screen/lockScreen.vue'
 
-const globalSetting = useGlobalSetting()
+const globalSetting = useWallpaper()
 </script>
 
 <template>
   <LockScreen v-if="globalSetting.lock" />
-  我是APP
+  <div class="desktop">
+    <DesktopApp />
+    <StartMenu />
+    <SidePane />
+  </div>
+  <Taskbar />
 </template>
 
 <style scoped>
