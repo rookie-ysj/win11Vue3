@@ -2,13 +2,31 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 const useSidePane = defineStore('sidePane', () => {
-  const sidePaneOpen = ref(false)
-  const toggleSidePaneOpen = (value: boolean) => {
-    sidePaneOpen.value = value
+  // 日历和快速设置
+  const calendarOpen = ref(false)
+  const quickSettingOpen = ref(false)
+
+  function toggleCalendarOpen(value: boolean) {
+    calendarOpen.value = value
+    value && toggleQuickSettingOpen(false)
   }
+
+  function toggleQuickSettingOpen(value: boolean) {
+    quickSettingOpen.value = value
+    value && toggleCalendarOpen(false)
+  }
+
+  function closeAll() {
+    toggleCalendarOpen(false)
+    toggleQuickSettingOpen(false)
+  }
+
   return {
-    sidePaneOpen,
-    toggleSidePaneOpen,
+    calendarOpen,
+    quickSettingOpen,
+    toggleCalendarOpen,
+    toggleQuickSettingOpen,
+    closeAll,
   }
 })
 

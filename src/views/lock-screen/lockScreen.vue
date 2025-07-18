@@ -1,12 +1,11 @@
 <script lang="ts" setup>
-import dayjs from 'dayjs'
 import { ref } from 'vue'
+import { useWallpaper } from '@/store'
 import globalSetting from '@/store/wallpaper.ts'
-import { getDayOfWeek } from '@/utils/calculate.ts'
+import { getCurrentDate, getCurrentTime } from '@/utils'
 
-const currentDay = dayjs()
+const wallpaperStore = useWallpaper()
 
-const time = currentDay.format('h:mm A')
 const showLogin = ref(false)
 
 const password = ref('')
@@ -22,7 +21,7 @@ function login() {
 </script>
 
 <template>
-  <div class="lock-screen" @click="showLogin = true">
+  <div v-if="wallpaperStore.lock" class="lock-screen" @click="showLogin = true">
     <transition
       enter-active-class="animate__animated animate__fadeIn"
       leave-active-class="animate__animated animate__fadeOutUp"
@@ -30,9 +29,9 @@ function login() {
     >
       <div v-if="!showLogin" class="time-screen">
         <div class="text-5xl mb-1">
-          {{ time }}
+          {{ getCurrentDate() }}
         </div>
-        <div>{{ `${currentDay.month() + 1}月${currentDay.date()}日${getDayOfWeek(currentDay.day())}` }}</div>
+        <div>{{ getCurrentTime() }}</div>
       </div>
       <div v-else class="mt-44">
         <div class="user-avatar" />

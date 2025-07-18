@@ -1,8 +1,15 @@
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
-import { isUndefined } from '@/utils/judge.ts'
+import { isUndefined } from '@/utils'
 
 type Theme = 'light' | 'dark'
+
+enum Audio {
+  Mute,
+  Low,
+  Medium,
+  High,
+}
 
 const useSetting = defineStore('setting', () => {
   // 用户名
@@ -18,6 +25,16 @@ const useSetting = defineStore('setting', () => {
   const theme = ref<Theme>('dark')
   const setTheme = (value: Theme) => {
     theme.value = value
+  }
+
+  // 音量
+  const audio = reactive({
+    volume: 50,
+    mode: Audio.Medium,
+  })
+  const setAudio = (value: number) => {
+    audio.volume = value
+    audio.mode = value > 66 ? Audio.High : value > 33 ? Audio.Medium : value > 0 ? Audio.Low : Audio.Mute
   }
 
   // 电池
@@ -79,6 +96,8 @@ const useSetting = defineStore('setting', () => {
     toggleWifi,
     toggleBluetooth,
     toggleFlyMode,
+    audio,
+    setAudio,
   }
 })
 

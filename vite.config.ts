@@ -8,8 +8,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'), // 设置 `@` 指向 `src` 目录
-      // 这里可以继续添加其他别名
       // '/comps/': path.resolve(__dirname, './src/components'),
+      'vue': 'vue/dist/vue.esm-bundler.js',
     },
   },
 })
