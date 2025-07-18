@@ -44,7 +44,7 @@ const emits = defineEmits(['click'])
 const sidePane = useSidePane()
 
 const customIcon = icon ? (CustomIcons as any)[icon] : null
-const iconSrc = src ? `img/icon/${ui != null ? 'ui/' : ''}${src}.png` : ''
+const iconSrc = src ? `img/icon/${ui ? 'ui/' : ''}${src}.png` : ''
 
 const iconClass = {
   invert,
