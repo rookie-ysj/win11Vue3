@@ -2,54 +2,57 @@
 @import 'animate.css';
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    --animate-duration: 300ms;
+    --animate-delay: 0.9s;
 }
 
 a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
 }
 
 a:hover {
-  color: #535bf2;
+    color: #535bf2;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
 }
 
 body {
-  --dark-txt: #000;
-  --alt-txt: #fff;
-  --med-dark: #111;
-  --txt-col: #222;
-  --med-txt: #3c3c3c;
-  --comp-txt: #ddd;
-  --comp-clr: #e6e6e6;
-  --gray-txt: #555;
-  --sat-txt: #777;
-  --clrPrm: #0067c0;
-  --wintheme: #eee;
+    --dark-txt: #000;
+    --alt-txt: #fff;
+    --med-dark: #111;
+    --txt-col: #222;
+    --med-txt: #3c3c3c;
+    --comp-txt: #ddd;
+    --comp-clr: #e6e6e6;
+    --gray-txt: #555;
+    --sat-txt: #777;
+    --clrPrm: #0067c0;
+    --wintheme: #eee;
 
-  --txt_clr-rgb: 0 0 0;
-  --base_bg-rgb: 243 243 243;
+    --txt_clr-rgb: 0 0 0;
+    --base_bg-rgb: 243 243 243;
 
-  --fakeMica: #f3f3f3 radial-gradient(#eff4f9 75%, #f3f3f3 100%) no-repeat fixed;
+    --fakeMica: #f3f3f3 radial-gradient(#eff4f9 75%, #f3f3f3 100%) no-repeat fixed;
 }
 

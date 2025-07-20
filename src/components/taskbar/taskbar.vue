@@ -14,7 +14,7 @@ const { toggleStartMenuOpen } = useStartMenu()
 <template>
   <div class="taskbar flex">
     <div class="task-mid" :style="{ justifyContent: taskbar.location === TaskbarLocation.Left ? 'left' : 'center' }">
-      <Icon src="home" class="tsIcon" @click="toggleStartMenuOpen(true)" />
+      <Icon src="home" class="tsIcon" @click="toggleStartMenuOpen()" />
       <Icon v-if="taskbar.search" class="tsIcon" icon="search" invert />
       <Icon v-for="app in taskbar.apps" :key="app.icon" class="tsIcon" :src="app.icon" />
     </div>
