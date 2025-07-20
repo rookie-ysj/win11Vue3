@@ -1,13 +1,19 @@
+import type { Ref } from 'vue'
+import type { Application } from '@/types'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { APPLICATION } from '@/constants'
+import { COMPUTER, FILE_EXPLORER, GITHUB, RECYCLE_BIN, STORE } from '@/constants'
 
 const Desktop = [
-  'GitHub',
+  GITHUB,
+  FILE_EXPLORER,
+  COMPUTER,
+  STORE,
+  RECYCLE_BIN,
 ]
 
 const useDesktop = defineStore('desktop', () => {
-  const desktopApps = ref(APPLICATION.filter(app => Desktop.includes(app.name)))
+  const desktopApps = ref(Desktop) as Ref<Application[]>
 
   return {
     desktopApps,

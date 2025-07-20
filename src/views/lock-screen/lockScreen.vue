@@ -8,14 +8,7 @@ const wallpaperStore = useWallpaper()
 
 const showLogin = ref(false)
 
-const password = ref('')
-const passwordWrong = ref(false)
-
 function login() {
-  if (password.value !== '123456') {
-    passwordWrong.value = true
-    return
-  }
   globalSetting().setLock(false)
 }
 </script>
@@ -38,10 +31,11 @@ function login() {
         <div class="mt-2 text-2xl">
           Administrator
         </div>
-        <input
-          v-model="password" :class="passwordWrong ? 'password-wrong' : ''" autofocus class="password-input"
-          type="password" @keyup.enter="login"
-        >
+        <div>
+          <button class="mt-2 sign-button" @click="login">
+            登录
+          </button>
+        </div>
       </div>
     </transition>
   </div>
@@ -58,7 +52,7 @@ function login() {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999;
+  z-index: 999999;
 }
 
 .time-screen {
@@ -74,18 +68,24 @@ function login() {
   margin: 0 auto;
 }
 
-.password-input {
-  width: 200px;
-  height: 40px;
-  margin: 20px auto;
-  border: 1px solid #fff;
-  border-radius: 20px;
-  background-color: transparent;
-  color: #fff;
-  text-align: center;
-}
-
 .password-input:focus {
   outline: none;
+}
+.sign-button {
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 13px;
+  padding: 4px 36px 6px;
+  color: #fff;
+  border: 2px solid transparent;
+  border-radius: 4px;
+
+  &:hover {
+    border: 2px solid rgba(255, 255, 255, 0.33);
+  }
+
+  &:active {
+    border: 2px solid transparent;
+    background: rgba(255, 255, 255, 0.33);
+  }
 }
 </style>

@@ -1,3 +1,9 @@
 export default {
-  test: '测试',
+  GitHub: 'Github',
+  FileExplorer: 'File Explorer',
+  Setting: 'Setting',
+  Twitter: 'Twitter',
+  Computer: 'Computer',
+  Store: 'Store',
+  RecycleBin: 'Recycle Bin',
 }

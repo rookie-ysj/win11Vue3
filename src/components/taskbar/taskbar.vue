@@ -13,20 +13,19 @@ const { toggleStartMenuOpen } = useStartMenu()
 
 <template>
   <div class="taskbar flex">
-    <div v-if="taskbar.location === TaskbarLocation.Center" />
-    <div :class="taskbar.location === TaskbarLocation.Left ? 'taskbar-left' : 'taskbar-center'">
+    <div class="task-mid" :style="{ justifyContent: taskbar.location === TaskbarLocation.Left ? 'left' : 'center' }">
       <Icon src="home" class="tsIcon" @click="toggleStartMenuOpen(true)" />
-      <Icon v-if="taskbar.search" class="tsIcon" icon="search" />
-      <Icon v-for="app in taskbar.apps" :key="app.icon" class="tsIcon" :icon="app.icon" />
+      <Icon v-if="taskbar.search" class="tsIcon" icon="search" invert />
+      <Icon v-for="app in taskbar.apps" :key="app.icon" class="tsIcon" :src="app.icon" />
     </div>
-    <div class="flex">
-      <Icon fa-icon="faChevronUp" />
-      <div class="px-2 prtclk handcr hvlight flex" @click="toggleQuickSettingOpen(true)">
-        <Icon src="wifi" ui :width="16" />
-        <Icon :src="`audio${setting.audio.mode}`" />
-        <Battery />
+    <div class="task-right">
+      <Icon fa-icon="faChevronUp" class="h-full tsIcon" :width="16" invert />
+      <div class="px-2 prtclk handcr hvlight rounded flex h-full" @click="toggleQuickSettingOpen(true)">
+        <Icon src="wifi" ui :width="16" class="taskIcon" />
+        <Icon :src="`audio${setting.audio.mode}`" :width="16" ui class="taskIcon" />
+        <Battery class="taskIcon" />
       </div>
-      <div class="taskDate m-1 handcr prtclk rounded hvlight" @click="toggleCalendarOpen(true)">
+      <div class="taskDate handcr prtclk rounded hvlight h-full" @click="toggleCalendarOpen(true)">
         <div>{{ getCurrentTime() }}</div>
         <div>{{ getCurrentDate() }}</div>
       </div>
@@ -48,12 +47,31 @@ const { toggleStartMenuOpen } = useStartMenu()
   right: 0;
   bottom: 0;
   z-index: 10000;
+  padding: 4px 0;
+
+  & > div {
+    height: 100%;
+  }
+
 }
 
-.flex {
+.task-mid {
+  width: 100%;
+  height: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
+  transition: all ease-in-out 200ms;
+}
+
+.task-right {
+  position: absolute;
+  top: 4px;
+  right: 0;
+  width: auto;
+  height: 40px !important;
+  margin-left: 10px;
+  display: flex;
 }
 
 .tsIcon {
@@ -62,7 +80,6 @@ const { toggleStartMenuOpen } = useStartMenu()
   height: 38px;
   margin: auto 3px;
   box-sizing: border-box;
-  border-radius: 0;
   background: rgba(254, 254, 254, 0);
   transform-origin: center;
   animation: popintro 800ms ease-in-out;
@@ -93,6 +110,17 @@ const { toggleStartMenuOpen } = useStartMenu()
   &:hover,
   &[data-active="true"] {
     background: var(--bg2);
+  }
+}
+
+:deep(.taskIcon) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 24px;
+
+  svg {
+    color: #303030;
   }
 }
 

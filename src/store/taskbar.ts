@@ -1,11 +1,14 @@
+import type { Ref } from 'vue'
+import type { Application } from '@/types'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { APPLICATION } from '@/constants'
+import { EDGE, FILE_EXPLORER, SETTING, STORE } from '@/constants'
 
 const Taskbar = [
-  'edge',
-  'File Explorer',
-  'Settings',
+  EDGE,
+  FILE_EXPLORER,
+  SETTING,
+  STORE,
 ]
 
 export enum TaskbarLocation {
@@ -14,7 +17,7 @@ export enum TaskbarLocation {
 }
 
 const useTaskbar = defineStore('taskbar', () => {
-  const apps = ref(APPLICATION.filter(app => Taskbar.includes(app.name)))
+  const apps = ref(Taskbar) as Ref<Application[]>
 
   // 搜索
   const search = ref(true)

@@ -12,14 +12,14 @@ const {
   reg,
   src,
   ui,
-  width,
+  width = 20,
   height,
-  invert,
-  rounded,
-  flip,
-  color,
-  margin,
-} = withDefaults(defineProps<{
+  invert = false,
+  rounded = false,
+  flip = false,
+  color = 'white',
+  margin = 0,
+} = defineProps<{
   icon?: string
   faIcon?: string // Font Awesome 图标
   reg?: boolean // 是否为 Font Awesome 常规图标
@@ -32,14 +32,7 @@ const {
   flip?: boolean
   color?: string
   margin?: string | number
-}>(), {
-  width: 20,
-  invert: false,
-  rounded: false,
-  flip: false,
-  color: 'white',
-  margin: 0,
-})
+}>()
 const emits = defineEmits(['click'])
 const sidePane = useSidePane()
 
@@ -84,8 +77,9 @@ function handleClick() {
 
 <style scoped>
 .icon {
-  display: inline-block;
-  margin-right: 12px;
+  position: relative;
+  display: grid;
+  place-items: center;
 }
 
 .invert {

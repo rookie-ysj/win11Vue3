@@ -14,7 +14,7 @@ const btLevel = ref(Math.round(Math.abs(setting.battery.level)))
 <template>
   <div class="flex">
     <div class="battery flex">
-      <div v-if="btLevel < 50" class="charger">
+      <div v-if="btLevel < 100" class="charger">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="12"
@@ -68,5 +68,19 @@ const btLevel = ref(Math.round(Math.abs(setting.battery.level)))
 </template>
 
 <style scoped>
+.battery {
+  display: flex;
+  position: relative;
+}
 
+.btFull {
+  overflow: hidden;
+  position: absolute;
+  z-index: 0;
+}
+
+.charger svg {
+  position: absolute;
+  z-index: 1;
+}
 </style>

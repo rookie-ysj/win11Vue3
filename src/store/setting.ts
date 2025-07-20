@@ -39,7 +39,7 @@ const useSetting = defineStore('setting', () => {
 
   // 电池
   const battery = reactive({
-    level: 100,
+    level: 90,
     charging: true,
     saveMode: false,
   })
