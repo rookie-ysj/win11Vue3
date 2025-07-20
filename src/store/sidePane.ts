@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useSetting } from '@/store/index.ts'
 
 const useSidePane = defineStore('sidePane', () => {
@@ -9,12 +9,16 @@ const useSidePane = defineStore('sidePane', () => {
 
   function toggleCalendarOpen(value: boolean) {
     calendarOpen.value = value
-    value && toggleQuickSettingOpen(false)
+    if (value) {
+      toggleQuickSettingOpen(false)
+    }
   }
 
   function toggleQuickSettingOpen(value: boolean) {
     quickSettingOpen.value = value
-    value && toggleCalendarOpen(false)
+    if (value) {
+      toggleCalendarOpen(false)
+    }
   }
 
   function closeAll() {
@@ -28,37 +32,43 @@ const useSidePane = defineStore('sidePane', () => {
       ui: true,
       src: 'wifi',
       name: 'WiFi',
-      state: setting.connect.wifi,
+      state: computed(() => setting.connect.wifi),
+      onClick: () => setting.toggleWifi(),
     },
     {
       ui: true,
       src: 'bluetooth',
       name: 'Bluetooth',
-      state: setting.connect.bluetooth,
+      state: computed(() => setting.connect.bluetooth),
+      onClick: () => setting.toggleBluetooth(),
     },
     {
       ui: true,
       src: 'airplane',
       name: 'Flight Mode',
-      state: setting.connect.flyMode,
+      state: computed(() => setting.connect.flyMode),
+      onClick: () => setting.toggleFlyMode(),
     },
     {
       ui: true,
       src: 'saver',
       name: 'Battery Saver',
-      state: setting.battery.saveMode,
+      state: computed(() => setting.battery.saveMode),
+      onClick: () => setting.toggleBatterySaveMode(),
     },
     {
       ui: true,
       src: 'sun',
       name: 'Theme',
-      state: setting.theme,
+      // state: computed(() => setting.theme),
+      state: computed(() => false),
+      onClick: () => setting.toggleTheme(),
     },
     {
       ui: true,
       src: 'nightlight',
       name: 'Night Light',
-      state: 'system.display.nightlight.state',
+      state: false,
     },
   ])
 

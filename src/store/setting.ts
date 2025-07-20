@@ -77,9 +77,14 @@ const useSetting = defineStore('setting', () => {
     connect.bluetooth = !connect.bluetooth
   }
   const toggleFlyMode = (value: boolean) => {
+    if (isUndefined(value)) {
+      value = !connect.flyMode
+    }
     connect.flyMode = value
-    toggleBluetooth(!value)
-    toggleWifi(!value)
+    if (value) {
+      toggleWifi(false)
+      toggleBluetooth(false)
+    }
   }
 
   return {

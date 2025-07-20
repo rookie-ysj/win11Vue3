@@ -30,12 +30,15 @@ onClickOutside(qsRef, () => {
           <div v-for="(item, index) in sidePaneStore.quickSetting" :key="index" class="qkGrp">
             <div
               class="qkbtn handcr prtclk"
+              :data-state="item.state"
+              @click="item.onClick"
             >
               <Icon
                 class="quickIcon"
                 :ui="item.ui"
                 :src="item.src"
                 width="14"
+                :invert="item.state"
               />
             </div>
             <div class="qktext">
