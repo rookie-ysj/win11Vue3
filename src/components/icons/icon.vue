@@ -3,7 +3,6 @@ import * as FaRegIcons from '@fortawesome/free-regular-svg-icons'
 import * as FaIcons from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { computed } from 'vue'
-import { useSidePane } from '@/store'
 import { getCssPx } from '@/utils'
 import * as CustomIcons from './icon'
 
@@ -26,17 +25,15 @@ const {
   icon,
   faIcon,
   reg,
-  src,
   ui,
   width = 20,
   height,
   color = 'white',
   margin = 0,
 } = props
-const sidePane = useSidePane()
 
 const customIcon = icon ? (CustomIcons as any)[icon] : null
-const iconSrc = src ? `img/icon/${ui ? 'ui/' : ''}${src}.png` : ''
+const iconSrc = computed(() => props.src ? `img/icon/${ui ? 'ui/' : ''}${props.src}.png` : '')
 
 const iconClass = computed(() => {
   return {
@@ -58,7 +55,6 @@ const iconStyle = (function () {
 
 function handleClick() {
   // 关闭侧边栏
-  sidePane.closeAll()
   emits('click')
 }
 </script>

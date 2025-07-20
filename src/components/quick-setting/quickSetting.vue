@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { onClickOutside } from '@vueuse/core'
-import { useTemplateRef } from 'vue'
+import { onMounted, ref, useTemplateRef } from 'vue'
+import Battery from '@/components/battery/battery.vue'
 import Icon from '@/components/icons/icon.vue'
 import { useSetting, useSidePane } from '@/store'
+import { isObject } from '@/utils'
 
 const sidePaneStore = useSidePane()
 const setting = useSetting()
@@ -10,6 +12,19 @@ const setting = useSetting()
 const qsRef = useTemplateRef('quickSettingRef')
 onClickOutside(qsRef, () => {
   sidePaneStore.toggleQuickSettingOpen(false)
+})
+
+function setSlider(event: Event | number, callback: (number: number) => void) {
+  const value = isObject(event) ? event.target.value : event
+  event.target.style.background = `linear-gradient(to right, var(--clrPrm) ${value - 3}%, #ccc ${value}%)`
+  callback(Number(value))
+}
+
+const brightnessSlider = ref<HTMLInputElement>()
+const volumeSlider = ref<HTMLInputElement>()
+onMounted(() => {
+  brightnessSlider.value.style.background = `linear-gradient(90deg, var(--clrPrm) ${setting.brightness - 3}%, #888888 ${setting.brightness}%)`
+  volumeSlider.value.style.background = `linear-gradient(90deg, var(--clrPrm) ${setting.volume - 3}%, #888888 ${setting.volume}%)`
 })
 </script>
 
@@ -20,7 +35,7 @@ onClickOutside(qsRef, () => {
     mode="out-in"
   >
     <div
-      v-if="sidePaneStore.quickSettingOpen"
+      v-show="sidePaneStore.quickSettingOpen"
       ref="quickSettingRef"
       class="sidePane"
       style="--prefix: PANE"
@@ -47,32 +62,36 @@ onClickOutside(qsRef, () => {
           </div>
         </div>
         <div class="sliderCont">
-          <Icon class="mx-2" src="brightness" ui width="20">
-            <input
-              id="brightnessSlider"
-              class="sliders bSlider"
-              type="range"
-              min="10"
-              max="100"
-            >
-          </icon>
+          <Icon class="mx-2 shrink-0" src="brightness" ui width="20" />
+          <input
+            id="brightnessSlider"
+            ref="brightnessSlider"
+            :value="setting.brightness"
+            class="slider bSlider"
+            type="range"
+            min="10"
+            max="100"
+            @input="(e) => setSlider(e, setting.setBrightness)"
+          >
         </div>
         <div class="sliderCont">
-          <Icon class="mx-2" :src="`audio${setting.audio.mode}`" ui width="18">
-            <input
-              class="sliders vSlider"
-              type="range"
-              min="0"
-              max="100"
-            >
-          </icon>
+          <Icon class="mx-2 shrink-0" :src="`audio${setting.volumeMode}`" ui width="18" />
+          <input
+            ref="volumeSlider"
+            class="slider vSlider"
+            :value="setting.volume"
+            type="range"
+            min="0"
+            max="100"
+            @input="(e) => setSlider(e, setting.setVolume)"
+          >
         </div>
       </div>
-      <!--    <div class="p-1 bottomBar"> -->
-      <!--      <div class="px-3 battery-sidepane"> -->
-      <!--        <Battery pct /> -->
-      <!--      </div> -->
-      <!--    </div> -->
+      <div class="p-1 bottomBar">
+        <div class="px-3 battery-sidepane">
+          <Battery show-num />
+        </div>
+      </div>
     </div>
   </transition>
 </template>
@@ -157,70 +176,35 @@ onClickOutside(qsRef, () => {
     display: flex;
     align-items: center;
 
-    .sliders {
+    .slider {
+      -webkit-appearance: none;
       width: 100%;
       height: 4px;
+      border-radius: 5px;
+      background: linear-gradient(to right, var(--clrPrm) 50%, #ccc 50%);
+      outline: none;
+      transition: background 450ms ease-in;
+    }
 
-      &[type="range"] {
-        --track-color: linear-gradient(90deg, var(--clrPrm) 100%, #888888 100%);
-        -webkit-appearance: none;
-        background: transparent;
-      }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 18px;
+      width: 18px;
+      border-radius: 50%;
+      background: var(--clrPrm);
+      border: 3px solid white;
+      cursor: pointer;
+      margin-top: -2px; /* align with track */
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    }
 
-      &[type="range"]::-webkit-slider-runnable-track {
-        width: 100%;
-        height: 4px;
-        background: var(--track-color);
-        border-radius: 10px;
-        border: 0;
-      }
-
-      &[type="range"]::-webkit-slider-thumb {
-        border: 4px solid var(--sliderThumbClr);
-        height: 18px;
-        width: 18px;
-        border-radius: 10px;
-        background: var(--clrPrm);
-        -webkit-appearance: none;
-        margin-top: -8px;
-        transition: all 0.1s;
-
-        &:hover {
-          border: 3px solid var(--sliderThumbClr);
-        }
-
-        &:active {
-          border: 5px solid var(--sliderThumbClr);
-        }
-      }
-
-      &[type="range"]:focus::-webkit-slider-runnable-track {
-        background: var(--track-color);
-      }
-
-      &[type="range"]::-moz-range-track {
-        width: 100%;
-        height: 4px;
-        background: var(--track-color);
-        border-radius: 10px;
-        border: 0;
-      }
-
-      &[type="range"]::-moz-range-thumb {
-        border: 4px solid var(--sliderThumbClr);
-        height: 18px;
-        width: 18px;
-        border-radius: 10px;
-        background: var(--clrPrm);
-
-        &:hover {
-          border: 3px solid var(--sliderThumbClr);
-        }
-
-        &:active {
-          border: 5px solid var(--sliderThumbClr);
-        }
-      }
+    .slider::-moz-range-thumb {
+      height: 18px;
+      width: 18px;
+      border-radius: 50%;
+      background: var(--clrPrm);
+      border: 3px solid white;
+      cursor: pointer;
     }
   }
 

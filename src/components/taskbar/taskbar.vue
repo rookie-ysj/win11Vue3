@@ -22,7 +22,7 @@ const { toggleStartMenuOpen } = useStartMenu()
       <Icon fa-icon="faChevronUp" class="h-full tsIcon" :width="16" invert />
       <div class="px-2 prtclk handcr hvlight rounded flex h-full" @click="toggleQuickSettingOpen(true)">
         <Icon src="wifi" ui :width="16" class="taskIcon" />
-        <Icon :src="`audio${setting.audio.mode}`" :width="16" ui class="taskIcon" />
+        <Icon :src="`audio${setting.volumeMode}`" :width="16" ui class="taskIcon" />
         <Battery class="taskIcon" />
       </div>
       <div class="taskDate handcr prtclk rounded hvlight h-full" @click="toggleCalendarOpen(true)">

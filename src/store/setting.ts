@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { isUndefined } from '@/utils'
 
 type Theme = 'light' | 'dark'
@@ -28,13 +28,12 @@ const useSetting = defineStore('setting', () => {
   }
 
   // 音量
-  const audio = reactive({
-    volume: 50,
-    mode: Audio.Medium,
+  const volume = ref(100)
+  const volumeMode = computed(() => {
+    return volume.value > 66 ? Audio.High : volume.value > 33 ? Audio.Medium : volume.value > 0 ? Audio.Low : Audio.Mute
   })
-  const setAudio = (value: number) => {
-    audio.volume = value
-    audio.mode = value > 66 ? Audio.High : value > 33 ? Audio.Medium : value > 0 ? Audio.Low : Audio.Mute
+  const setVolume = (value: number) => {
+    volume.value = value
   }
 
   // 电池
@@ -52,8 +51,10 @@ const useSetting = defineStore('setting', () => {
 
   // 亮度
   const brightness = ref(100)
+  const brightOverlay = document.querySelector<HTMLDivElement>('#brightOverlay')
   const setBrightness = (value: number) => {
     brightness.value = value
+    brightOverlay.style.opacity = `${(100 - value) / 100}`
   }
 
   // 连接
@@ -101,8 +102,9 @@ const useSetting = defineStore('setting', () => {
     toggleWifi,
     toggleBluetooth,
     toggleFlyMode,
-    audio,
-    setAudio,
+    volume,
+    volumeMode,
+    setVolume,
   }
 })
 
