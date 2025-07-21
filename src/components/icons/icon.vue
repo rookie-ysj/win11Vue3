@@ -6,7 +6,20 @@ import { computed } from 'vue'
 import { getCssPx } from '@/utils'
 import * as CustomIcons from './icon'
 
-const props = defineProps<{
+const {
+  icon,
+  faIcon,
+  reg,
+  ui,
+  width = 20,
+  height,
+  color = 'white',
+  margin = 0,
+  invert = false,
+  rounded = false,
+  flip = false,
+  src,
+} = defineProps<{
   icon?: string
   faIcon?: string // Font Awesome 图标
   reg?: boolean // 是否为 Font Awesome 常规图标
@@ -21,25 +34,14 @@ const props = defineProps<{
   margin?: string | number
 }>()
 const emits = defineEmits(['click'])
-const {
-  icon,
-  faIcon,
-  reg,
-  ui,
-  width = 20,
-  height,
-  color = 'white',
-  margin = 0,
-} = props
-
 const customIcon = icon ? (CustomIcons as any)[icon] : null
-const iconSrc = computed(() => props.src ? `img/icon/${ui ? 'ui/' : ''}${props.src}.png` : '')
+const iconSrc = computed(() => src ? `img/icon/${ui ? 'ui/' : ''}${src}.png` : '')
 
 const iconClass = computed(() => {
   return {
-    invert: props.invert || false,
-    rounded: props.rounded || false,
-    flip: props.flip || false,
+    invert,
+    rounded,
+    flip,
   }
 })
 const iconStyle = (function () {
