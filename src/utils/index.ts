@@ -8,11 +8,7 @@ export const isObject = (value: unknown): value is object => typeof value === 'o
 export const isFunction = (value: unknown): value is Function => typeof value === 'function'
 export const isString = (value: unknown): value is string => typeof value === 'string'
 export const isNumber = (value: unknown): value is number => typeof value === 'number'
-
-export function getDayOfWeek(date: number): string {
-  const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
-  return days[date]
-}
+export const isBoolean = (value: unknown): value is boolean => typeof value === 'boolean'
 
 export function getCurrentDate() {
   return dayjs().format('YYYY-MM-DD')
