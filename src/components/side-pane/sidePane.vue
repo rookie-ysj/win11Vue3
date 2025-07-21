@@ -1,11 +1,7 @@
-<script setup lang="ts">
-import { useSidePane } from '@/store'
-
-const sidePaneStore = useSidePane()
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div v-if="sidePaneStore.sidePaneOpen" class="side-pane">
+  <div class="side-pane">
     我是侧边栏
   </div>
 </template>

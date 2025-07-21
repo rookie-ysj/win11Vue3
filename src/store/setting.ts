@@ -51,7 +51,7 @@ const useSetting = defineStore('setting', () => {
 
   // 亮度
   const brightness = ref(100)
-  const brightOverlay = document.querySelector<HTMLDivElement>('#brightOverlay')
+  const brightOverlay = document.querySelector<HTMLDivElement>('#brightOverlay')!
   const setBrightness = (value: number) => {
     brightness.value = value
     brightOverlay.style.opacity = `${(100 - value) / 100}`
@@ -77,7 +77,7 @@ const useSetting = defineStore('setting', () => {
     }
     connect.bluetooth = !connect.bluetooth
   }
-  const toggleFlyMode = (value: boolean) => {
+  const toggleFlyMode = (value?: boolean) => {
     if (isUndefined(value)) {
       value = !connect.flyMode
     }
