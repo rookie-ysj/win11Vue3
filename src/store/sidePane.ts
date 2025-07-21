@@ -62,7 +62,7 @@ const useSidePane = defineStore('sidePane', () => {
       name: 'Theme',
       // state: computed(() => setting.theme),
       state: computed(() => false),
-      onClick: () => setting.toggleTheme(),
+      onClick: () => setting.setTheme('dark'),
     },
     {
       ui: true,

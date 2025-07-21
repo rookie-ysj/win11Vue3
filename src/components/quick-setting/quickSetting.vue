@@ -4,7 +4,6 @@ import { onMounted, ref, useTemplateRef } from 'vue'
 import Battery from '@/components/battery/battery.vue'
 import Icon from '@/components/icons/icon.vue'
 import { useSetting, useSidePane } from '@/store'
-import { isObject } from '@/utils'
 
 const sidePaneStore = useSidePane()
 const setting = useSetting()
@@ -14,18 +13,23 @@ onClickOutside(qsRef, () => {
   sidePaneStore.toggleQuickSettingOpen(false)
 })
 
-function setSlider(event: Event | number, callback: (number: number) => void) {
-  const value = isObject(event) ? event.target.value : event
-  event.target.style.background = `linear-gradient(to right, var(--clrPrm) ${value - 3}%, #ccc ${value}%)`
-  callback(Number(value))
+function setSlider(event: Event, callback: (number: number) => void) {
+  const target = event.target! as HTMLInputElement
+  const value = Number(target.value)
+  setSliderColor(target, value)
+  callback(value)
 }
 
 const brightnessSlider = ref<HTMLInputElement>()
 const volumeSlider = ref<HTMLInputElement>()
 onMounted(() => {
-  brightnessSlider.value.style.background = `linear-gradient(90deg, var(--clrPrm) ${setting.brightness - 3}%, #888888 ${setting.brightness}%)`
-  volumeSlider.value.style.background = `linear-gradient(90deg, var(--clrPrm) ${setting.volume - 3}%, #888888 ${setting.volume}%)`
+  setSliderColor(brightnessSlider.value!, setting.brightness)
+  setSliderColor(volumeSlider.value!, setting.volume)
 })
+
+function setSliderColor(element: HTMLElement, value: number) {
+  element.style.background = `linear-gradient(90deg, var(--clrPrm) ${value - 3}%, #888888 ${value}%)`
+}
 </script>
 
 <template>
