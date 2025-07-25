@@ -5,10 +5,9 @@
   "type": "module",
   "scripts": {
     "frontend-serve": "pnpm --filter frontend serve",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview",
-    "prepare": "husky",
-    "test": "vitest"
+    "frontend-build": "pnpm --filter frontend build",
+    "frontend-test": "pnpm --filter frontend test",
+    "prepare": "husky"
   },
   "dependencies": {
   },

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "serve": "vite",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "vue-tsc -b && vite build",
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
