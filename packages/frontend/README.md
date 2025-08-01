@@ -1,5 +1,5 @@
-# Web Win11 Project using Vue3
+# 前端
 
-Refer to [win11React](https://github.com/blueedgetechno/win11React)
+支持功能
 
-using Vue3 + Typescript + Vite
+- win11 任务栏/desktop
