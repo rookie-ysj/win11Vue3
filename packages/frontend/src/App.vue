@@ -7,19 +7,24 @@ import StartMenu from '@/components/start-menu/startMenu.vue'
 import Taskbar from '@/components/taskbar/taskbar.vue'
 import Background from '@/containers/background/background.vue'
 import LockScreen from '@/views/lock-screen/lockScreen.vue'
+import axios from "axios";
+
+axios.get('/api/hello').then(res => {
+  console.log(res.data)
+})
 </script>
 
 <template>
-  <LockScreen />
+  <LockScreen/>
   <div class="desktop">
-    <Background />
-    <DesktopApp />
-    <StartMenu />
-    <SidePane />
-    <Calendar />
-    <QuickSetting />
+    <Background/>
+    <DesktopApp/>
+    <StartMenu/>
+    <SidePane/>
+    <Calendar/>
+    <QuickSetting/>
   </div>
-  <Taskbar />
+  <Taskbar/>
 </template>
 
 <style scoped>
