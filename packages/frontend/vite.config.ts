@@ -16,5 +16,14 @@ export default defineConfig(({ mode }) => {
         'vue': 'vue/dist/vue.esm-bundler.js',
       },
     },
+    server: {
+      proxy: {
+        '/api': {
+          target: env.BASE_API,
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/api/, ''),
+        },
+      },
+    },
   }
 })

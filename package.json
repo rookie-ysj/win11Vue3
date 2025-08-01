@@ -4,9 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "frontend-serve": "pnpm --filter frontend serve",
-    "frontend-build": "pnpm --filter frontend build",
-    "frontend-test": "pnpm --filter frontend test",
+    "frontend-serve": "pnpm --filter @win11-vue3/frontend serve",
+    "frontend-build": "pnpm --filter @win11-vue3/frontend build",
+    "frontend-test": "pnpm --filter @win11-vue3/frontend test",
+    "backend-serve": "pnpm --filter @win11-vue3/backend start",
+    "backend-serve-watch": "pnpm --filter @win11-vue3/backend start:dev",
     "prepare": "husky"
   },
   "dependencies": {

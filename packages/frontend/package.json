@@ -20,6 +20,7 @@
     "@tailwindcss/postcss": "^4.0.5",
     "@vueuse/core": "^13.5.0",
     "animate.css": "^4.1.1",
+    "axios": "^1.11.0",
     "dayjs": "^1.11.13",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.2.0",
@@ -30,12 +31,12 @@
     "vue-i18n": "^11.1.10"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "@vitest/coverage-v8": "3.2.4",
+    "autoprefixer": "^10.4.21",
     "vite": "^5.3.4",
     "vite-plugin-vue-devtools": "^7.7.7",
     "vitest": "^3.2.4",
-    "vue-tsc": "^2.0.24",
-    "@vitejs/plugin-vue": "^5.0.5",
-    "@vitest/coverage-v8": "3.2.4",
-    "autoprefixer": "^10.4.21"
+    "vue-tsc": "^2.0.24"
   }
 }
