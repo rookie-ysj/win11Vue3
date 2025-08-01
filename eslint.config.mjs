@@ -4,5 +4,6 @@ import antfu from '@antfu/eslint-config'
 export default antfu({
   rules: {
     'node/prefer-global/process': 'off',
+    '@typescript-eslint/consistent-type-imports': 'off',
   },
 })
