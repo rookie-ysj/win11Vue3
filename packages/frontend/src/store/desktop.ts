@@ -2,7 +2,7 @@ import type { Ref } from 'vue'
 import type { Application } from '@/types'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { COMPUTER, FILE_EXPLORER, GITHUB, RECYCLE_BIN, STORE } from '@/constants'
+import { COMPUTER, FILE_EXPLORER, GITHUB, RECYCLE_BIN, STORE, TERMINAL } from '@/constants'
 
 const Desktop = [
   GITHUB,
@@ -10,6 +10,7 @@ const Desktop = [
   COMPUTER,
   STORE,
   RECYCLE_BIN,
+  TERMINAL,
 ]
 
 const useDesktop = defineStore('desktop', () => {

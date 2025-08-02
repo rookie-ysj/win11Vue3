@@ -68,3 +68,7 @@ body {
     pointer-events: none;
     z-index: 999999999;
 }
+
+.text-xss {
+    font-size: 0.64em;
+}

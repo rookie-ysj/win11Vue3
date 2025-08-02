@@ -7,9 +7,9 @@ const edgeApp = useApplication().applications[EDGE.name]
 </script>
 
 <template>
-  <div>
+  <div v-if="!edgeApp.hide">
     <ToolBar
-      :icon="edgeApp.icon" name="edgeApp.name"
+        :icon="edgeApp.icon" name="edgeApp.name"
     />
   </div>
 </template>

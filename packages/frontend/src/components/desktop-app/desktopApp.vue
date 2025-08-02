@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import Icon from '@/components/icons/icon.vue'
-import { useDesktop } from '@/store'
+import { useApplication, useDesktop } from '@/store'
 
 const desktopStore = useDesktop()
+const applicationStore = useApplication()
 </script>
 
 <template>
-  <div v-for="app in desktopStore.desktopApps" :key="app.icon" class="desk-app" @click="app.onClick">
-    <Icon class="desk-icon prtclk" :src="app.icon" pr width="36" />
+  <div v-for="app in applicationStore.applications"
+       :key="app.icon"
+       class="desk-app"
+       @click="applicationStore.toggleApplicationHide(app.name, false)">
+    <Icon class="desk-icon prtclk" :src="app.icon" pr width="36"/>
     <div class="app-name">
       {{ $t(app.name) }}
     </div>

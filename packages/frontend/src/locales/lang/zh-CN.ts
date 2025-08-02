@@ -6,4 +6,6 @@ export default {
   Computer: '计算机',
   Store: '微软商店',
   RecycleBin: '回收站',
+  Terminal: '终端',
+  Edge: 'Edge',
 }

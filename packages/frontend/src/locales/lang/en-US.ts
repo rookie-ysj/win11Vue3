@@ -6,4 +6,6 @@ export default {
   Computer: 'Computer',
   Store: 'Store',
   RecycleBin: 'Recycle Bin',
+  Terminal: 'Terminal',
+  Edge: 'Edge',
 }

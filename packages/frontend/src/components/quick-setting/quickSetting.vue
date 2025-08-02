@@ -34,30 +34,29 @@ function setSliderColor(element: HTMLElement, value: number) {
 
 <template>
   <transition
-    enter-active-class="animate__animated animate__slideInUp"
-    leave-active-class="animate__animated animate__slideOutDown"
-    mode="out-in"
+      enter-active-class="animate__animated animate__slideInUp"
+      leave-active-class="animate__animated animate__slideOutDown"
   >
     <div
-      v-show="sidePaneStore.quickSettingOpen"
-      ref="quickSettingRef"
-      class="sidePane"
-      style="--prefix: PANE"
+        v-show="sidePaneStore.quickSettingOpen"
+        ref="quickSettingRef"
+        class="sidePane"
+        style="--prefix: PANE"
     >
       <div class="quickSettings p-5 pb-8">
         <div class="qkCont">
           <div v-for="(item, index) in sidePaneStore.quickSetting" :key="index" class="qkGrp">
             <div
-              class="qkbtn handcr prtclk"
-              :data-state="item.state"
-              @click="item.onClick"
+                class="qkbtn handcr prtclk"
+                :data-state="item.state"
+                @click="item.onClick"
             >
               <Icon
-                class="quickIcon"
-                :ui="item.ui"
-                :src="item.src"
-                width="14"
-                :invert="item.state"
+                  class="quickIcon"
+                  :ui="item.ui"
+                  :src="item.src"
+                  width="14"
+                  :invert="item.state"
               />
             </div>
             <div class="qktext">
@@ -66,34 +65,34 @@ function setSliderColor(element: HTMLElement, value: number) {
           </div>
         </div>
         <div class="sliderCont">
-          <Icon class="mx-2 shrink-0" src="brightness" ui width="20" />
+          <Icon class="mx-2 shrink-0" src="brightness" ui width="20"/>
           <input
-            id="brightnessSlider"
-            ref="brightnessSlider"
-            :value="setting.brightness"
-            class="slider bSlider"
-            type="range"
-            min="10"
-            max="100"
-            @input="(e) => setSlider(e, setting.setBrightness)"
+              id="brightnessSlider"
+              ref="brightnessSlider"
+              :value="setting.brightness"
+              class="slider bSlider"
+              type="range"
+              min="10"
+              max="100"
+              @input="(e) => setSlider(e, setting.setBrightness)"
           >
         </div>
         <div class="sliderCont">
-          <Icon class="mx-2 shrink-0" :src="`audio${setting.volumeMode}`" ui width="18" />
+          <Icon class="mx-2 shrink-0" :src="`audio${setting.volumeMode}`" ui width="18"/>
           <input
-            ref="volumeSlider"
-            class="slider vSlider"
-            :value="setting.volume"
-            type="range"
-            min="0"
-            max="100"
-            @input="(e) => setSlider(e, setting.setVolume)"
+              ref="volumeSlider"
+              class="slider vSlider"
+              :value="setting.volume"
+              type="range"
+              min="0"
+              max="100"
+              @input="(e) => setSlider(e, setting.setVolume)"
           >
         </div>
       </div>
       <div class="p-1 bottomBar">
         <div class="px-3 battery-sidepane">
-          <Battery show-num />
+          <Battery show-num/>
         </div>
       </div>
     </div>

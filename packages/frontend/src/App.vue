@@ -7,11 +7,14 @@ import StartMenu from '@/components/start-menu/startMenu.vue'
 import Taskbar from '@/components/taskbar/taskbar.vue'
 import Background from '@/containers/background/background.vue'
 import LockScreen from '@/views/lock-screen/lockScreen.vue'
-import axios from "axios";
+import * as ApplicationInstances from '@/containers/applications'
+import { useApplication } from '@/store';
 
-axios.get('/api/hello').then(res => {
-  console.log(res.data)
-})
+const applications = useApplication().applications
+
+// axios.get('/api/hello').then(res => {
+//   console.log(res.data)
+// })
 </script>
 
 <template>
@@ -23,6 +26,7 @@ axios.get('/api/hello').then(res => {
     <SidePane/>
     <Calendar/>
     <QuickSetting/>
+    <Component v-for="app in Object.keys(applications)" :key="app" :is="(ApplicationInstances as any)[app]"/>
   </div>
   <Taskbar/>
 </template>

@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import Battery from '@/components/battery/battery.vue'
 import Icon from '@/components/icons/icon.vue'
-import { useSetting, useSidePane, useStartMenu, useTaskbar } from '@/store'
+import { useApplication, useSetting, useSidePane, useStartMenu, useTaskbar } from '@/store'
 import { TaskbarLocation } from '@/store/taskbar.ts'
 import { getCurrentDate, getCurrentTime } from '@/utils'
 
 const taskbar = useTaskbar()
 const setting = useSetting()
+const applicationStore = useApplication()
+const applications = Object.values(applicationStore.applications).filter(app => app.inTaskbar)
 const { toggleQuickSettingOpen, toggleCalendarOpen } = useSidePane()
 const { toggleStartMenuOpen } = useStartMenu()
 </script>
@@ -16,7 +18,8 @@ const { toggleStartMenuOpen } = useStartMenu()
     <div class="task-mid" :style="{ justifyContent: taskbar.location === TaskbarLocation.Left ? 'left' : 'center' }">
       <Icon src="home" class="tsIcon" @click="toggleStartMenuOpen()" />
       <Icon v-if="taskbar.search" class="tsIcon" icon="search" invert />
-      <Icon v-for="app in taskbar.apps" :key="app.icon" class="tsIcon" :src="app.icon" />
+      <Icon v-for="app in applications" @click="() => applicationStore.toggleApplicationHide(app.name)" :key="app.name"
+        class="tsIcon" :src="app.icon" :data-active="!app.hide" :data-open="app.open" />
     </div>
     <div class="task-right">
       <Icon fa-icon="faChevronUp" class="h-full tsIcon" :width="16" invert />
@@ -49,7 +52,7 @@ const { toggleStartMenuOpen } = useStartMenu()
   z-index: 10000;
   padding: 4px 0;
 
-  & > div {
+  &>div {
     height: 100%;
   }
 
