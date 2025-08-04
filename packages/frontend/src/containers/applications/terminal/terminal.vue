@@ -3,7 +3,7 @@ import ToolBar from '@/components/tool-bar/toolBar.vue';
 import { useApplication } from '@/store';
 import { TERMINAL } from '@/constants';
 import { computed, ref } from 'vue';
-import { CLEAR, CMD_LIST, HELP, LS, PWD } from './terminal';
+import { CLEAR, CMD_LIST, EXIT, HELP, IPCONFIG, LS, MKDIR, PWD, RM, TOUCH } from './terminal';
 
 const TerminalName = TERMINAL.name;
 const applicationStore = useApplication();
@@ -19,7 +19,7 @@ let index = 0;
 const pwd = ref('C:\\Users\\admin\\Desktop');
 const cmdInput = ref<HTMLDivElement>();
 
-function handleInput(e: KeyboardEvent) {
+async function handleInput(e: KeyboardEvent) {
   let cmd = cmdInput.value?.textContent || '';
   const setCmd = (cmd: string) => {
     cmdInput.value!.innerHTML = cmd;
@@ -41,10 +41,10 @@ function handleInput(e: KeyboardEvent) {
     case 'Enter':
       e.preventDefault();
       const res = cmd === CLEAR.name ?
-        executeCmd(cmd) :
+        await executeCmd(cmd) :
         `
           <div>${pwd.value}>${cmd}</div>
-          <div>${executeCmd(cmd)}</div>
+          <div>${await executeCmd(cmd)}</div>
         `;
       stack.value.push({
         cmd,
@@ -57,7 +57,8 @@ function handleInput(e: KeyboardEvent) {
 
 }
 
-function executeCmd(cmd: string) {
+async function executeCmd(cmd: string) {
+  cmd = cmd.trim().toLowerCase();
   switch (cmd) {
     case CLEAR.name:
       stack.value.forEach((item) => {
@@ -66,10 +67,32 @@ function executeCmd(cmd: string) {
       return '';
     case PWD.name:
       return `Path: ${pwd.value}`;
-    case LS.name:
-      return '1.txt\n2.txt\n3.txt';
     case HELP.name:
       return CMD_LIST.reduce((pre, cur) => pre + `<div class="flex"><div class="w-30">${cur.name}:</div> ${cur.info}</div>`, '');
+    case IPCONFIG.name:
+      const data = await fetch('https://ipapi.co/json').then(res => res.json());
+      return `
+        IP: ${data.ip}
+        城市: ${data.city}
+        国家: ${data.country_name}
+        时区: ${data.timezone}
+        互联网服务提供商: ${data.org}
+      `;
+    case EXIT.name:
+      applicationStore.toggleApplicationOpen(TerminalName, false);
+      return '';
+    case MKDIR.name:
+      // todo: 实现mkdir功能
+      return '';
+    case RM.name:
+      // todo: 实现rm功能
+      return '';
+    case TOUCH.name:
+      // todo: 实现touch功能
+      return '';
+    case LS.name:
+      // todo: 实现ls功能
+      return '';
     case '':
       return '';
     default:
