@@ -19,13 +19,20 @@ enum NodeType {
   DIRECTORY @map("directory")
 }
 
+enum fileStatus {
+  NORMAL
+  DELETED
+}
+
 model Node {
-  id         Int      @id @default(autoincrement())
+  id         Int        @id @default(autoincrement())
   name       String
   parent_id  Int?
   type       NodeType
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
+  status     fileStatus @default(NORMAL)
+  can_delete Boolean    @default(true)
 
   @@unique([name, parent_id, type])
 }

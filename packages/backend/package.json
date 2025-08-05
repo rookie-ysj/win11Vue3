@@ -24,7 +24,7 @@
     "prisma:studio": "prisma studio",
     "prisma:format": "prisma format",
     "prisma:push": "prisma db push",
-    "prisma:deploy": "prisma db deploy",
+    "prisma:deploy": "prisma db deploy"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

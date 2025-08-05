@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `node` ADD COLUMN `can_delete` BOOLEAN NOT NULL DEFAULT true,
+    ADD COLUMN `status` ENUM('NORMAL', 'DELETED') NOT NULL DEFAULT 'NORMAL';
