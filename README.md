@@ -4,7 +4,7 @@
 
 - 使用monorepo管理前后端
 - 前端使用Vue3 + Typescript + Vite
-- 后端使用NestJS + TypeScript
+- 后端使用NestJS + TypeScript + Mysql + Prisma
 
 ## todo
 
