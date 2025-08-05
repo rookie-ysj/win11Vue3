@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { $Enums } from '../../../generated/prisma'
+import status = $Enums.fileStatus
 import NodeType = $Enums.NodeType
 
 export class FileEntity {
@@ -14,4 +15,5 @@ export class FileEntity {
 
   created_at: Date
   updated_at: Date
+  status: status
 }
