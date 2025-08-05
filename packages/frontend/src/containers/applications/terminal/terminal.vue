@@ -2,8 +2,11 @@
 import ToolBar from '@/components/tool-bar/toolBar.vue';
 import { useApplication } from '@/store';
 import { TERMINAL } from '@/constants';
-import { computed, ref } from 'vue';
-import { CLEAR, CMD_LIST, EXIT, HELP, IPCONFIG, LS, MKDIR, PWD, RM, TOUCH } from './terminal';
+import { computed, reactive, ref, watch } from 'vue';
+import { CD, CLEAR, CMD_LIST, EXIT, HELP, IPCONFIG, LS, MKDIR, PWD, RM, TOUCH } from './terminal';
+import { fileService } from '@/api';
+import dayjs from 'dayjs';
+import { FileEntity } from '@/api/data-contracts.ts';
 
 const TerminalName = TERMINAL.name;
 const applicationStore = useApplication();
@@ -54,11 +57,31 @@ async function handleInput(e: KeyboardEvent) {
       setCmd('');
       break;
   }
-
 }
 
-async function executeCmd(cmd: string) {
-  cmd = cmd.trim().toLowerCase();
+const currentDirectoryId = ref(2)
+const currentFileList = reactive<FileEntity[]>([])
+const currentParentId = ref(0)
+const getCurrentFileList = async () => {
+  currentFileList.length = 0
+  currentFileList.push(...await fileService.fileControllerFindAll(currentDirectoryId.value).then(res => res.data))
+  console.log(currentFileList);
+}
+watch(currentDirectoryId, async () => {
+  getCurrentFileList()
+  currentParentId.value = await fileService.fileControllerFindOne(currentDirectoryId.value).then(res => res.data?.parent_id || 0)
+  pwd.value = await fileService.fileControllerFindAncestors(currentDirectoryId.value).then(res => {
+    const ancestors = res.data || []
+    return ancestors.map(ancestor => ancestor.name).join('\\')
+  })
+}, {
+  immediate: true,
+})
+
+async function executeCmd(cmdInfo: string) {
+  const cmdInfos = cmdInfo.trim().split(' ');
+  const cmd = cmdInfos[0].toLowerCase();
+  const args = cmdInfos.slice(1);
   switch (cmd) {
     case CLEAR.name:
       stack.value.forEach((item) => {
@@ -82,17 +105,81 @@ async function executeCmd(cmd: string) {
       applicationStore.toggleApplicationOpen(TerminalName, false);
       return '';
     case MKDIR.name:
-      // todo: 实现mkdir功能
+      if (args.length < 1) {
+        return 'mkdir: missing directory operand';
+      }
+      await fileService.fileControllerCreate({
+        name: args[0],
+        type: 'DIRECTORY',
+        parent_id: currentDirectoryId.value,
+      })
+      await getCurrentFileList()
       return '';
     case RM.name:
-      // todo: 实现rm功能
+      if (args.length < 1) {
+        return 'rm: missing file operand';
+      }
+      const removeId = currentFileList.find(
+        (file) => file.name === args[0],
+      )?.id;
+      if (!removeId || currentFileList.length === 0) {
+        return 'No files found.';
+      }
+      await fileService.fileControllerRemove(removeId);
+      await getCurrentFileList()
       return '';
     case TOUCH.name:
-      // todo: 实现touch功能
+      if (args.length < 1) {
+        return 'touch: missing file operand';
+      }
+      await fileService.fileControllerCreate({
+        name: args[0],
+        type: 'FILE',
+        parent_id: currentDirectoryId.value,
+      })
+      await getCurrentFileList()
       return '';
+    case CD.name:
+      if (args.length < 1) {
+        return 'cd: missing directory operand';
+      }
+      switch (args[0]) {
+        case '.':
+        case './':
+          return '';
+        case '..':
+        case '../':
+          if (currentParentId.value === 0) {
+            return ''
+          }
+          currentDirectoryId.value = currentParentId.value
+          return '';
+        default:
+          const directory = currentFileList.find((file) => file.type === 'DIRECTORY' && file.name === args[0])
+          if (directory) {
+            currentDirectoryId.value = directory.id
+            return '';
+          } else {
+            return `ls: cannot access '${args[0]}': No such directory`;
+          }
+      }
     case LS.name:
-      // todo: 实现ls功能
-      return '';
+      if (currentFileList.length === 0) {
+        return 'No files found.';
+      }
+      return `
+        <table class="terminal__table">
+          <tr>
+            <td>name</td>
+            <td>type</td>
+            <td>update_time</td>
+          </tr>
+          ${currentFileList.map(file => `<tr>
+            <td>${file.name}</td>
+            <td>${file.type}</td>
+            <td>${dayjs(file.updated_at).format('YYYY-M-D h:m:s')}</td>
+            </tr>`).join('')}
+        </table>`
     case '':
       return '';
     default:
@@ -113,7 +200,7 @@ async function executeCmd(cmd: string) {
         <div v-for="(item, index) in showStack" :key="index" class="terminal__history"
              v-html="item"></div>
         <div class="flex">
-          {{ pwd }}>
+          <div class="w-fit shrink-0">{{ pwd }}></div>
           <div ref="cmdInput" autofocus class="terminal__input" contenteditable="true"
                @keydown="handleInput"></div>
         </div>
@@ -148,5 +235,12 @@ async function executeCmd(cmd: string) {
   outline: none;
   border: none;
   width: 100%;
+}
+</style>
+<style>
+.terminal__table {
+  td {
+    padding: 0 10px;
+  }
 }
 </style>
