@@ -1,3 +1,5 @@
+import { TreeEntity } from '@/api/data-contracts.ts'
+
 export interface Cmd {
   name: string
   info: string
@@ -53,6 +55,35 @@ export const EXIT: Cmd = {
   info: 'exit terminal',
 }
 
+export const TREE: Cmd = {
+  name: 'tree',
+  info: 'show tree',
+}
+
+export function generateTreeVisual(tree: TreeEntity) {
+  let result = `<div class="flex">${tree.name ?? '~'}`
+  if (tree.children.length > 0) {
+    result += `—<div class="flex flex-col">`
+    tree.children.forEach((child, index) => {
+      const res = generateTreeVisual(child)
+      const className = ['flex']
+      if (tree.children.length > 1) {
+        className.push('terminal__tree__item')
+        if (index === 0) {
+          className.push('terminal__tree__item--first')
+        }
+        else if (index === tree.children.length - 1) {
+          className.push('terminal__tree__item--last')
+        }
+      }
+      result += `<div class="${className.join(' ')}">————${res}</div>`
+    })
+    result += '</div>'
+  }
+  result += '</div>'
+  return result
+}
+
 export const CMD_LIST = [
   HELP,
   PWD,
@@ -64,4 +95,5 @@ export const CMD_LIST = [
   MKDIR,
   RM,
   TOUCH,
+  TREE,
 ]

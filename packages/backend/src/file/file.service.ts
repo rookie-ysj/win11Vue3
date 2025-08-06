@@ -3,7 +3,13 @@ import { $Enums, Node, Prisma } from '../../generated/prisma'
 import { PrismaService } from '../prisma/prisma.service'
 import fileStatus = $Enums.fileStatus
 
-const selectData = {
+export type FileEntity = Pick<Node, 'id' | 'name' | 'parent_id' | 'type' | 'created_at' | 'updated_at'>
+
+export interface Tree extends FileEntity {
+  children: Tree[]
+}
+
+const selectData: Record<keyof FileEntity, boolean> = {
   id: true,
   name: true,
   parent_id: true,
@@ -22,14 +28,35 @@ export class FileService {
     })
   }
 
-  async findAll(id: number): Promise<Partial<Node>[]> {
-    return this.prisma.node.findMany({
+  async findAll(id: number): Promise<Tree> {
+    const nodes = await this.prisma.node.findMany({
       where: {
-        parent_id: id,
         status: fileStatus.NORMAL,
       },
       select: selectData,
     })
+    const map = new Map<number, FileEntity[]>()
+    let current: Tree
+    nodes.forEach((node) => {
+      if (!current && node.id === id) {
+        current = {
+          ...node,
+          children: [],
+        }
+      }
+      if (map.has(node.parent_id)) {
+        map.get(node.parent_id)!.push(node)
+      }
+      else {
+        map.set(node.parent_id, [node])
+      }
+    })
+    const dfs = async (node: Tree) => {
+      const children = map.get(node.id) ?? []
+      node.children = await Promise.all(children.map(async child => await dfs(child as Tree)))
+      return node
+    }
+    return dfs(current!)
   }
 
   async findOne(id: number): Promise<Partial<Node> | null> {
@@ -50,7 +77,7 @@ export class FileService {
       select: selectData,
     })
 
-    while (current?.parent_id) {
+    while (current) {
       ancestors.push(current)
       current = await this.prisma.node.findUnique({
         where: {

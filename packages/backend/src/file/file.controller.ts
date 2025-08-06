@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { CreateNodeDto } from './dto/createNode.dto'
-import { FileEntity } from './entity/file.entity'
+import { FileEntity, TreeEntity } from './entity/file.entity'
 import { FileService } from './file.service'
 
 @Controller('file')
@@ -13,7 +13,7 @@ export class FileController {
     status: 200,
     isArray: true,
     description: '返回所有文件',
-    type: FileEntity,
+    type: TreeEntity,
   })
   @Get('/children/:id')
   findAll(@Param('id') id: number) {

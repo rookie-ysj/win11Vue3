@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { $Enums } from '../../../generated/prisma'
-import status = $Enums.fileStatus
 import NodeType = $Enums.NodeType
 
 export class FileEntity {
@@ -15,5 +14,13 @@ export class FileEntity {
 
   created_at: Date
   updated_at: Date
-  status: status
+}
+
+export class TreeEntity extends FileEntity {
+  @ApiProperty({
+    type: () => TreeEntity, // ✅ 延迟类型引用，防止循环
+    isArray: true,
+    description: '子节点',
+  })
+  children: TreeEntity[]
 }

@@ -27,7 +27,7 @@ enum fileStatus {
 model Node {
   id         Int        @id @default(autoincrement())
   name       String
-  parent_id  Int?
+  parent_id  Int
   type       NodeType
   created_at DateTime   @default(now())
   updated_at DateTime   @default(now()) @updatedAt
