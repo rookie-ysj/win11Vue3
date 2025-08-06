@@ -3,10 +3,24 @@ import ToolBar from '@/components/tool-bar/toolBar.vue';
 import { useApplication } from '@/store';
 import { TERMINAL } from '@/constants';
 import { computed, reactive, ref, watch } from 'vue';
-import { CD, CLEAR, CMD_LIST, EXIT, HELP, IPCONFIG, LS, MKDIR, PWD, RM, TOUCH } from './terminal';
+import {
+  CD,
+  CLEAR,
+  CMD_LIST,
+  EXIT,
+  generateTreeVisual,
+  HELP,
+  IPCONFIG,
+  LS,
+  MKDIR,
+  PWD,
+  RM,
+  TOUCH,
+  TREE,
+} from './terminal';
 import { fileService } from '@/api';
 import dayjs from 'dayjs';
-import { FileEntity } from '@/api/data-contracts.ts';
+import { TreeEntity } from '@/api/data-contracts.ts';
 
 const TerminalName = TERMINAL.name;
 const applicationStore = useApplication();
@@ -19,7 +33,7 @@ const stack = ref<{
 const showStack = computed(() => stack.value.filter((item) => item.res).map((item) => item.res));
 
 let index = 0;
-const pwd = ref('C:\\Users\\admin\\Desktop');
+const pwd = ref('');
 const cmdInput = ref<HTMLDivElement>();
 
 async function handleInput(e: KeyboardEvent) {
@@ -60,19 +74,28 @@ async function handleInput(e: KeyboardEvent) {
 }
 
 const currentDirectoryId = ref(2)
-const currentFileList = reactive<FileEntity[]>([])
+const currentFileTree = reactive<TreeEntity>({
+  id: 1,
+  name: 'root',
+  type: 'DIRECTORY',
+  parent_id: 0,
+  created_at: dayjs().toISOString(),
+  updated_at: dayjs().toISOString(),
+  children: []
+})
 const currentParentId = ref(0)
-const getCurrentFileList = async () => {
-  currentFileList.length = 0
-  currentFileList.push(...await fileService.fileControllerFindAll(currentDirectoryId.value).then(res => res.data))
-  console.log(currentFileList);
+const getCurrentFileTree = async () => {
+  Object.assign(currentFileTree, await fileService.fileControllerFindAll(currentDirectoryId.value).then(res => res.data))
 }
 watch(currentDirectoryId, async () => {
-  getCurrentFileList()
-  currentParentId.value = await fileService.fileControllerFindOne(currentDirectoryId.value).then(res => res.data?.parent_id || 0)
+  getCurrentFileTree()
   pwd.value = await fileService.fileControllerFindAncestors(currentDirectoryId.value).then(res => {
     const ancestors = res.data || []
     return ancestors.map(ancestor => ancestor.name).join('\\')
+  })
+  fileService.fileControllerFindOne(currentDirectoryId.value).then(res => {
+    const data = res.data!
+    currentParentId.value = data.parent_id || 0
   })
 }, {
   immediate: true,
@@ -113,20 +136,20 @@ async function executeCmd(cmdInfo: string) {
         type: 'DIRECTORY',
         parent_id: currentDirectoryId.value,
       })
-      await getCurrentFileList()
+      await getCurrentFileTree()
       return '';
     case RM.name:
       if (args.length < 1) {
         return 'rm: missing file operand';
       }
-      const removeId = currentFileList.find(
+      const removeId = currentFileTree.children?.find(
         (file) => file.name === args[0],
       )?.id;
-      if (!removeId || currentFileList.length === 0) {
+      if (!removeId || currentFileTree.children?.length === 0) {
         return 'No files found.';
       }
       await fileService.fileControllerRemove(removeId);
-      await getCurrentFileList()
+      await getCurrentFileTree()
       return '';
     case TOUCH.name:
       if (args.length < 1) {
@@ -137,7 +160,7 @@ async function executeCmd(cmdInfo: string) {
         type: 'FILE',
         parent_id: currentDirectoryId.value,
       })
-      await getCurrentFileList()
+      await getCurrentFileTree()
       return '';
     case CD.name:
       if (args.length < 1) {
@@ -155,7 +178,7 @@ async function executeCmd(cmdInfo: string) {
           currentDirectoryId.value = currentParentId.value
           return '';
         default:
-          const directory = currentFileList.find((file) => file.type === 'DIRECTORY' && file.name === args[0])
+          const directory = currentFileTree.children?.find((file) => file.type === 'DIRECTORY' && file.name === args[0])
           if (directory) {
             currentDirectoryId.value = directory.id
             return '';
@@ -164,7 +187,7 @@ async function executeCmd(cmdInfo: string) {
           }
       }
     case LS.name:
-      if (currentFileList.length === 0) {
+      if (currentFileTree.children?.length === 0) {
         return 'No files found.';
       }
       return `
@@ -174,12 +197,14 @@ async function executeCmd(cmdInfo: string) {
             <td>type</td>
             <td>update_time</td>
           </tr>
-          ${currentFileList.map(file => `<tr>
+          ${currentFileTree.children?.map(file => `<tr>
             <td>${file.name}</td>
             <td>${file.type}</td>
             <td>${dayjs(file.updated_at).format('YYYY-M-D h:m:s')}</td>
             </tr>`).join('')}
         </table>`
+    case TREE.name:
+      return generateTreeVisual(currentFileTree)
     case '':
       return '';
     default:
@@ -237,10 +262,32 @@ async function executeCmd(cmdInfo: string) {
   width: 100%;
 }
 </style>
-<style>
+<style lang="scss">
 .terminal__table {
   td {
     padding: 0 10px;
+  }
+}
+.terminal__tree__item {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 100%; /* 控制边框高度为元素高度的一半 */
+    width: 1px; /* 边框宽度 */
+    background-color: #fff; /* 边框颜色 */
+  }
+
+  &--first::after {
+    height: 49%;
+  }
+
+  &--last::after {
+    bottom: 50%;
+    height: 50%;
   }
 }
 </style>

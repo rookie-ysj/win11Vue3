@@ -10,6 +10,20 @@
  * ---------------------------------------------------------------
  */
 
+export interface TreeEntity {
+  /** 文件类型: FILE | DIRECTORY */
+  type: "FILE" | "DIRECTORY";
+  /** 子节点 */
+  children: TreeEntity[];
+  id: number;
+  name: string;
+  parent_id: number;
+  /** @format date-time */
+  created_at: string;
+  /** @format date-time */
+  updated_at: string;
+}
+
 export interface FileEntity {
   /** 文件类型: FILE | DIRECTORY */
   type: "FILE" | "DIRECTORY";

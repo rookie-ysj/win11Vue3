@@ -10,7 +10,7 @@
  * ---------------------------------------------------------------
  */
 
-import { CreateNodeDto, FileEntity } from "./data-contracts";
+import { CreateNodeDto, FileEntity, TreeEntity } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class File<SecurityDataType = unknown> {
@@ -29,7 +29,7 @@ export class File<SecurityDataType = unknown> {
    * @request GET:/file/children/{id}
    */
   fileControllerFindAll = (id: number, params: RequestParams = {}) =>
-    this.http.request<FileEntity[], any>({
+    this.http.request<TreeEntity[], any>({
       path: `/file/children/${id}`,
       method: "GET",
       format: "json",
@@ -57,9 +57,10 @@ export class File<SecurityDataType = unknown> {
    * @request DELETE:/file/{id}
    */
   fileControllerRemove = (id: number, params: RequestParams = {}) =>
-    this.http.request<void, any>({
+    this.http.request<boolean, any>({
       path: `/file/${id}`,
       method: "DELETE",
+      format: "json",
       ...params,
     });
   /**
