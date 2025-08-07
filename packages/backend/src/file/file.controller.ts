@@ -11,7 +11,7 @@ export class FileController {
   @ApiOperation({ summary: '获取文件列表' })
   @ApiResponse({
     status: 200,
-    isArray: true,
+    isArray: false,
     description: '返回所有文件',
     type: TreeEntity,
   })
