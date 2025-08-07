@@ -29,7 +29,7 @@ export class File<SecurityDataType = unknown> {
    * @request GET:/file/children/{id}
    */
   fileControllerFindAll = (id: number, params: RequestParams = {}) =>
-    this.http.request<TreeEntity[], any>({
+    this.http.request<TreeEntity, any>({
       path: `/file/children/${id}`,
       method: "GET",
       format: "json",

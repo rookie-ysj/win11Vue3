@@ -2,7 +2,7 @@
 import ToolBar from '@/components/tool-bar/toolBar.vue';
 import { useApplication } from '@/store';
 import { TERMINAL } from '@/constants';
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import {
   CD,
   CLEAR,
@@ -20,7 +20,7 @@ import {
 } from './terminal';
 import { fileService } from '@/api';
 import dayjs from 'dayjs';
-import { TreeEntity } from '@/api/data-contracts.ts';
+import { useQuery } from '@tanstack/vue-query';
 
 const TerminalName = TERMINAL.name;
 const applicationStore = useApplication();
@@ -32,10 +32,34 @@ const stack = ref<{
 }[]>([]);
 const showStack = computed(() => stack.value.filter((item) => item.res).map((item) => item.res));
 
-let index = 0;
-const pwd = ref('');
 const cmdInput = ref<HTMLDivElement>();
+const currentDirectoryId = ref(2)
 
+const { data: pwd } = useQuery({
+  queryKey: [currentDirectoryId, 'pwd'],
+  queryFn: () => fileService.fileControllerFindAncestors(currentDirectoryId.value).then(res => {
+      const ancestors = res.data || []
+      return ancestors.map(ancestor => ancestor.name).join('\\')
+    }),
+  initialData: 'C:',
+})
+
+const { data: currentFileTree, refetch: getTree } = useQuery({
+  queryKey: [currentDirectoryId, 'getTree'],
+  queryFn: () => fileService.fileControllerFindAll(currentDirectoryId.value).then(res => res.data),
+  initialData: {
+    id: 1,
+    name: 'C:',
+    type: 'DIRECTORY',
+    parent_id: 0,
+    children: [],
+    updated_at: dayjs().toISOString(),
+    created_at: dayjs().toISOString(),
+  }
+})
+const currentParentId = computed(() => currentFileTree.value.parent_id)
+
+let index = 0;
 async function handleInput(e: KeyboardEvent) {
   let cmd = cmdInput.value?.textContent || '';
   const setCmd = (cmd: string) => {
@@ -73,34 +97,6 @@ async function handleInput(e: KeyboardEvent) {
   }
 }
 
-const currentDirectoryId = ref(2)
-const currentFileTree = reactive<TreeEntity>({
-  id: 1,
-  name: 'root',
-  type: 'DIRECTORY',
-  parent_id: 0,
-  created_at: dayjs().toISOString(),
-  updated_at: dayjs().toISOString(),
-  children: []
-})
-const currentParentId = ref(0)
-const getCurrentFileTree = async () => {
-  Object.assign(currentFileTree, await fileService.fileControllerFindAll(currentDirectoryId.value).then(res => res.data))
-}
-watch(currentDirectoryId, async () => {
-  getCurrentFileTree()
-  pwd.value = await fileService.fileControllerFindAncestors(currentDirectoryId.value).then(res => {
-    const ancestors = res.data || []
-    return ancestors.map(ancestor => ancestor.name).join('\\')
-  })
-  fileService.fileControllerFindOne(currentDirectoryId.value).then(res => {
-    const data = res.data!
-    currentParentId.value = data.parent_id || 0
-  })
-}, {
-  immediate: true,
-})
-
 async function executeCmd(cmdInfo: string) {
   const cmdInfos = cmdInfo.trim().split(' ');
   const cmd = cmdInfos[0].toLowerCase();
@@ -136,20 +132,20 @@ async function executeCmd(cmdInfo: string) {
         type: 'DIRECTORY',
         parent_id: currentDirectoryId.value,
       })
-      await getCurrentFileTree()
+      await getTree()
       return '';
     case RM.name:
       if (args.length < 1) {
         return 'rm: missing file operand';
       }
-      const removeId = currentFileTree.children?.find(
+      const removeId = currentFileTree.value.children.find(
         (file) => file.name === args[0],
       )?.id;
-      if (!removeId || currentFileTree.children?.length === 0) {
+      if (!removeId || currentFileTree.value.children.length === 0) {
         return 'No files found.';
       }
       await fileService.fileControllerRemove(removeId);
-      await getCurrentFileTree()
+      await getTree()
       return '';
     case TOUCH.name:
       if (args.length < 1) {
@@ -160,7 +156,7 @@ async function executeCmd(cmdInfo: string) {
         type: 'FILE',
         parent_id: currentDirectoryId.value,
       })
-      await getCurrentFileTree()
+      await getTree()
       return '';
     case CD.name:
       if (args.length < 1) {
@@ -178,7 +174,7 @@ async function executeCmd(cmdInfo: string) {
           currentDirectoryId.value = currentParentId.value
           return '';
         default:
-          const directory = currentFileTree.children?.find((file) => file.type === 'DIRECTORY' && file.name === args[0])
+          const directory = currentFileTree.value.children.find((file) => file.type === 'DIRECTORY' && file.name === args[0])
           if (directory) {
             currentDirectoryId.value = directory.id
             return '';
@@ -187,7 +183,7 @@ async function executeCmd(cmdInfo: string) {
           }
       }
     case LS.name:
-      if (currentFileTree.children?.length === 0) {
+      if (currentFileTree.value.children.length === 0) {
         return 'No files found.';
       }
       return `
@@ -197,14 +193,14 @@ async function executeCmd(cmdInfo: string) {
             <td>type</td>
             <td>update_time</td>
           </tr>
-          ${currentFileTree.children?.map(file => `<tr>
+          ${currentFileTree.value.children.map(file => `<tr>
             <td>${file.name}</td>
             <td>${file.type}</td>
             <td>${dayjs(file.updated_at).format('YYYY-M-D h:m:s')}</td>
             </tr>`).join('')}
         </table>`
     case TREE.name:
-      return generateTreeVisual(currentFileTree)
+      return generateTreeVisual(currentFileTree.value)
     case '':
       return '';
     default:
