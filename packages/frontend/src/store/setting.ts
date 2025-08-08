@@ -1,6 +1,6 @@
+import { isUndefined } from 'es-toolkit'
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
-import { isUndefined } from '@/utils'
 
 type Theme = 'light' | 'dark'
 
