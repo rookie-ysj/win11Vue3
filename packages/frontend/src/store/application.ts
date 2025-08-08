@@ -1,8 +1,8 @@
+import { isBoolean } from 'es-toolkit'
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 import { APPLICATION } from '@/constants'
 import { Application } from '@/types'
-import { isBoolean } from '@/utils'
 
 interface ApplicationInfo extends Application {
   left: number

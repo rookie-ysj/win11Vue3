@@ -1,6 +1,6 @@
+import { isUndefined } from 'es-toolkit'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { isUndefined } from '@/utils'
 
 const useStartMenu = defineStore('startMenu', () => {
   const startMenuOpen = ref(false)
