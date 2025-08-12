@@ -5,6 +5,7 @@ export const EDGE: Application = {
   icon: 'edge',
   inTaskbar: true,
   inDesktop: true,
+  inStartMenu: true,
 } as const
 
 export const GITHUB: Application = {
@@ -12,6 +13,7 @@ export const GITHUB: Application = {
   icon: 'github',
   inTaskbar: false,
   inDesktop: true,
+  inStartMenu: false,
   onClick: () => window.open('https://github.com/rookie-ysj/win11Vue3'),
 } as const
 
@@ -20,6 +22,7 @@ export const FILE_EXPLORER: Application = {
   icon: 'explorer',
   inTaskbar: true,
   inDesktop: true,
+  inStartMenu: true,
 } as const
 
 export const SETTING: Application = {
@@ -27,6 +30,7 @@ export const SETTING: Application = {
   icon: 'settings',
   inTaskbar: true,
   inDesktop: true,
+  inStartMenu: true,
 } as const
 
 export const COMPUTER: Application = {
@@ -34,6 +38,7 @@ export const COMPUTER: Application = {
   icon: 'win/user',
   inTaskbar: false,
   inDesktop: true,
+  inStartMenu: false,
 } as const
 
 export const STORE: Application = {
@@ -41,6 +46,7 @@ export const STORE: Application = {
   icon: 'store',
   inTaskbar: true,
   inDesktop: true,
+  inStartMenu: true,
 } as const
 
 export const RECYCLE_BIN: Application = {
@@ -48,6 +54,7 @@ export const RECYCLE_BIN: Application = {
   icon: 'bin0',
   inTaskbar: false,
   inDesktop: true,
+  inStartMenu: false,
 } as const
 
 export const TERMINAL: Application = {
@@ -55,6 +62,7 @@ export const TERMINAL: Application = {
   icon: 'terminal',
   inTaskbar: true,
   inDesktop: true,
+  inStartMenu: true,
 } as const
 
 export const APPLICATION: Application[] = [
